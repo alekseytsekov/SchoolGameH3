@@ -161,8 +161,8 @@
 
         public virtual void Restart()
         {
-            this.LoadDefaultStartArmy();
             this.availableCreatures.Clear();
+            this.LoadDefaultStartArmy();
         }
 
         protected abstract void LoadDefaultStartArmy();

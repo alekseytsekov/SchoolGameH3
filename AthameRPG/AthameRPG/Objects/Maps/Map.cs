@@ -14,6 +14,8 @@
         private readonly Rectangle earthImageCrop = new Rectangle(0, 0, 50, 50);
         private readonly Rectangle grassImageCrop = new Rectangle(50, 0, 50, 50);
         private readonly Rectangle darkStoneImageCrop = new Rectangle(100, 0, 50, 50);
+        private readonly Rectangle whiteHorizontalBricksImageCrop = new Rectangle(150, 0, 50, 50);
+        private readonly Rectangle whiteVerticalBricksImageCrop = new Rectangle(200, 0, 50, 50);
 
         private string mapPath;
         private List<List<int>> fullMap;
@@ -117,10 +119,14 @@
                             this.cropWall = this.earthImageCrop;
                             break;
                         case 1://grass
-                            this.cropWall = this.grassImageCrop;
+                            this.cropWall = this.whiteHorizontalBricksImageCrop;
                             break;
                         case 2://dark stone
                             this.cropWall = this.darkStoneImageCrop;
+                            break;
+
+                        case 3://grass
+                            this.cropWall = this.grassImageCrop;
                             break;
 
                         default:

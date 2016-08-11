@@ -814,18 +814,28 @@
 
         public static bool IsBehindOrInFrontUsForAttack(WarUnit currentUnit, WarUnit targetUnit)
         {
+            //int distance = 0;
+            //if (currentUnit.AmIArcherOrMage)
+            //{
+            //    distance = currentUnit.MinAttackDistance;
+            //}
+            //else
+            //{
+            //    distance = (int)currentUnit.AvailableMove;
+            //}
+
             bool isBehind = IsNear(currentUnit.DrawCoord.X + currentUnit.CropWidth, targetUnit.DrawCoord.X,
                 currentUnit.MinAttackDistance);
 
             bool inFront = IsNear(currentUnit.DrawCoord.X, targetUnit.DrawCoord.X + targetUnit.CropWidth,
                 currentUnit.MinAttackDistance);
 
-            bool nearUsByY = currentUnit.DrawCoord.Y >= targetUnit.DrawCoord.Y &&
+            bool nearUsByY = currentUnit.DrawCoord.Y >= targetUnit.DrawCoord.Y - 15 &&
                              currentUnit.DrawCoord.Y <= targetUnit.DrawCoord.Y + targetUnit.CropHeight;
 
             bool nearUsByYCrop = currentUnit.DrawCoord.Y + currentUnit.CropHeight >= targetUnit.DrawCoord.Y &&
                                  currentUnit.DrawCoord.Y + currentUnit.CropHeight <=
-                                 targetUnit.DrawCoord.Y + targetUnit.CropHeight;
+                                 targetUnit.DrawCoord.Y + targetUnit.CropHeight + 15;
 
             bool byY = nearUsByY || nearUsByYCrop;
 

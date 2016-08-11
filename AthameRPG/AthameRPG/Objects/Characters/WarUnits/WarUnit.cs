@@ -507,7 +507,7 @@
 
                             this.arrow.FlyTo(this.DrawCoord, enemy.warUnitDrawCoord, this.warUnitImage);
                             enemy.isAttacked = true;
-                            enemy.SetAttacker(this, arrow);
+                            enemy.SetAttacker(this, this.arrow);
                             this.amIAttacking = true;
                             this.availableMove = 0;
 
@@ -515,32 +515,6 @@
                         }
                         else
                         {
-                            //bool inFrontOfUs =
-                            //    CollisionDetection.IsNear(this.WarUnitDrawCoord.X + this.CropWidth,
-                            //        enemy.WarUnitDrawCoord.X, this.MinAttackDistance)
-                            //    && CollisionDetection.IsNear(this.WarUnitDrawCoord.Y, enemy.WarUnitDrawCoord.Y,
-                            //        this.MinAttackDistance);
-
-                            //bool behindUs =
-                            //    CollisionDetection.IsNear(this.WarUnitDrawCoord.X,
-                            //        enemy.WarUnitDrawCoord.X + enemy.CropHeight, this.MinAttackDistance)
-                            //    &&
-                            //    CollisionDetection.IsNear(this.WarUnitDrawCoord.Y, enemy.WarUnitDrawCoord.Y,
-                            //        this.MinAttackDistance);
-
-                            //if (behindUs || inFrontOfUs)
-                            //{
-                            //    MapManager.Instance.Battlefield.TryToAttackEnemyUnit(this, enemy, this.weapon);
-                            //    this.amIAttacking = true;
-                            //    enemy.IsAttackable = false;
-                            //}
-                            //else
-                            //{
-                            //    this.wantedPosition.X = MouseExtended.Current.CurrentState.X - (cropWidth / 2);
-                            //    this.wantedPosition.Y = MouseExtended.Current.CurrentState.Y - (cropHeight / 2);
-
-                            //    this.Moving();
-                            //}
                             if (CollisionDetection.IsBehindOrInFrontUsForAttack(this, enemy))
                             {
                                 // play sound
@@ -633,9 +607,9 @@
                 supportRange = (int)this.availableMove;
             }
 
-            double distanceBetweenAttackerEnemy = CollisionDetection.CalculateDistanceTravelled(this.warUnitDrawCoord, enemy.warUnitDrawCoord);
+            double distanceBetweenAttackerAndEnemy = CollisionDetection.CalculateDistanceTravelled(this.warUnitDrawCoord, enemy.warUnitDrawCoord);
 
-            if (distanceBetweenAttackerEnemy <= supportRange + this.cropWidth / 2)
+            if (distanceBetweenAttackerAndEnemy <= supportRange + this.cropWidth / 2)
             {
                 return true;
             }
@@ -643,9 +617,14 @@
             {
                 return false;
             }
-            
+            //return CollisionDetection.IsBehindOrInFrontUsForAttack(this, enemy);
         }
-        
+
+        public double AvailableMove
+        {
+            get { return this.availableMove; }
+        }
+
         private void Moving()
         {
             if (this.availableMove > 0)
@@ -702,6 +681,11 @@
                     {
                         this.CanIMoveX = false;
                     }
+                }
+
+                if (this.lastDrawCoord.X == 0 && this.lastDrawCoord.Y == 0)
+                {
+                    this.lastDrawCoord = oldPosition;
                 }
 
                 this.availableMove -= CollisionDetection.CalculateDistanceTravelled(this.lastDrawCoord,
@@ -768,7 +752,26 @@
 
                 if (this.availableMove > 0)
                 {
-                    if (hasArcherFriend)
+                    // if player have only one type unit
+                    if (MapManager.Instance.Battlefield.TryTakePlayerArmy().Count == 1)
+                    {
+                        //search everywhere
+                        this.supportUnit = MapManager.Instance.Battlefield.TryTakeNearestPlayerUnit(this, 2500);
+
+                        if (CollisionDetection.IsBehindOrInFrontUsForAttack(this, this.supportUnit))
+                        {
+                            this.amIAttacking = true;
+                            this.EnemyTryAttackPlayer(this, this.supportUnit, this.weapon);
+
+                            this.SetSoundFromEnemyAttack();
+                        }
+                        else
+                        {
+                            this.SetMoveToEnemy(this.supportUnit);
+                            this.Moving();
+                        }
+                    }
+                    else if (hasArcherFriend)
                     {
                         this.supportUnit = MapManager.Instance.Battlefield.TryTakeNearestPlayerUnit(this,
                             this.attackAnywayDistance);
@@ -836,7 +839,7 @@
                         }
 
                         this.supportUnit.isAttacked = true;
-                        this.supportUnit.SetAttacker(this, arrow);
+                        this.supportUnit.SetAttacker(this, this.arrow);
                         this.amIAttacking = true;
                         this.availableMove = 0;
                     }

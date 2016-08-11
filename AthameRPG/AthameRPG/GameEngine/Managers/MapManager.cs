@@ -14,7 +14,7 @@
 
     public class MapManager
     {
-        private const string Map_List_Path = @"../../../../Content/Maps/mapList.txt";
+        private const string Map_List_Path = @"Content/Maps/mapList.txt";
         private const string Terrain_Path = @"../Content/MapImages/terrain";
         private const int StartingMapIndex = 0;
         private const int ValueForEnemyPath = 1;

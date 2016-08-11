@@ -148,8 +148,7 @@
 
             foreach (var enemyUnit in this.enemyUnits)
             {
-
-                if (!this.playerTurn && enemyUnit.Key.GetStrengthLevel == unitStreghtLevelIndex)
+                if (!this.playerTurn && this.CanShoot()  && enemyUnit.Key.GetStrengthLevel == unitStreghtLevelIndex)
                 {
                     enemyUnit.Key.MoveInBattle();
                 }
@@ -697,6 +696,11 @@
         public Dictionary<WarUnit, decimal> TryTakeEnemyArmy()
         {
             return this.enemyUnits;
+        }
+
+        public Dictionary<WarUnit, decimal> TryTakePlayerArmy()
+        {
+            return this.playerUnits;
         }
 
         public bool CanShoot()

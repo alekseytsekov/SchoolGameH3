@@ -62,9 +62,9 @@
         
         protected override void LoadDefaultStartArmy()
         {
-            this.availableCreatures.Add(new BlackDragon(), 1);
-            this.availableCreatures.Add(new Goro(), 3);
-            this.availableCreatures.Add(new Elf(), 11);
+            this.availableCreatures.Add(new BlackDragon(), 8);
+            this.availableCreatures.Add(new Goro(), 18);
+            this.availableCreatures.Add(new Elf(), 30);
         }
     }
 }
